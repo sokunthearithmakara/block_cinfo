@@ -1,0 +1,73 @@
+<div id="scroll-left" class="d-none scrollnav"><i class="fa fa-chevron-left"></i></div><div id="scroll-right" class="d-none scrollnav"><i class="fa fa-chevron-right"></i></div>
+<div id="toolbar" class="my-1 position-relative">
+    {{#showsearch}}
+    <div id="modarray" data-modarray="{{modarray}}"></div>
+    {{^searchexpand}}
+    <span class="cinfo-btn border-0" id="btn-search" data-toggle="tooltip" data-placement="top"
+            data-original-title="{{#str}}search,block_cinfo{{/str}}"><i class="fa fa-search fa-lg"></i></span>
+    {{/searchexpand}}
+    {{/showsearch}}
+
+    {{#showprogress}}
+        {{^hascriteria}}
+        <span class="cinfo-btn font-weight-bold" id="btn-progress" data-toggle="tooltip" data-placement="top"
+        data-original-title="{{#str}}progress,block_cinfo{{/str}}"><i class="fa-solid fa-chart-simple fa-fw mr-2"></i>{{progress}}%</span>
+        {{/hascriteria}}
+        {{#hascriteria}}
+        <a class="cinfo-btn font-weight-bold" id="btn-progress" href="{{progressurl}}" data-toggle="tooltip" data-placement="top"
+        data-original-title="{{#str}}progress,block_cinfo{{/str}}"><i class="fa-solid fa-chart-simple fa-fw mr-2"></i>{{progress}}%</a>
+        {{/hascriteria}}
+    {{/showprogress}}
+
+    {{#showgrade}}
+        <a class="cinfo-btn font-weight-bold" id="btn-grade" href="{{gradeurl}}" data-toggle="tooltip" data-placement="top"
+        data-original-title="{{#str}}gradenoun{{/str}}"><i class="fa-solid fa-trophy fa-fw mr-2"></i>{{grade}}%</a>
+    {{/showgrade}}
+
+    {{#showcourseinfo}}
+        <span class="cinfo-btn" id="btn-courseinfo"  data-contextid="{{contextid}}"><i class="fa-solid fa-info-circle fa-fw"></i><span class="ml-2">{{{courseinfotitle}}}</span></span>
+        <div id="courseinfo-title" class="d-none">
+            {{{courseinfotitle}}}
+        </div>
+    {{/showcourseinfo}}
+
+    {{#shownews}}
+        <a class="cinfo-btn" id="btn-news" href="{{newsurl}}"><i class="fa-solid fa-bullhorn fa-fw mr-2"></i>{{#str}}news,block_cinfo{{/str}}{{#unreadposts}}<span class="badge badge-danger ml-2">{{unreadposts}}</span>{{/unreadposts}}</a>
+    {{/shownews}}
+
+    {{#showreport}}
+        <a class="cinfo-btn" id="btn-report" href="{{{reporturl}}}"><i class="fa-solid fa-table fa-fw mr-2"></i>{{#str}}report,block_cinfo{{/str}}</a>
+    {{/showreport}}
+
+    {{#showvr}}
+    <a class="cinfo-btn" id="btn-vr" href="{{vrurl}}" target="_blank">{{#pix}}{{vrtype}},block_cinfo{{/pix}}{{#vrlabel}}<span class="ml-2">{{vrlabel}}</span>{{/vrlabel}}</a>
+    {{/showvr}}
+
+    {{#showcr}}
+    <a class="cinfo-btn" id="btn-cr" href="{{crurl}}" target="_blank">{{#pix}}{{crtype}},block_cinfo{{/pix}}{{#crlabel}}<span class="ml-2">{{crlabel}}</span>{{/crlabel}}</a>
+    {{/showcr}}
+
+    {{#showfolder}}
+    <a class="cinfo-btn" id="btn-folder" href="{{folderurl}}" target="_blank">{{#pix}}{{foldertype}},block_cinfo{{/pix}}{{#folderlabel}}<span class="ml-2">{{folderlabel}}</span>{{/folderlabel}}</a>
+    {{/showfolder}}
+</div>
+<div id="cinfo-block-search" class="autocomplete {{^searchexpand}}d-none{{/searchexpand}} position-absolute w-100 my-1">
+        <div class="input-group {{#searchexpand}}w-100{{/searchexpand}}">
+            <input type="text" id="modsearch" class="form-control"
+                placeholder="{{#str}}typetosearch,block_cinfo{{/str}}">
+            <div class="input-group-append {{^searchexpand}}search-close cursor-pointer{{/searchexpand}}">
+                <span class="input-group-text">
+                    <i class="fa fa-{{#searchexpand}}magnifying-glass{{/searchexpand}}{{^searchexpand}}times{{/searchexpand}}"></i>
+                </span>
+            </div>
+        </div>
+
+        <ul id="searchresults" class="list-group mt-1 shadow-sm"></ul>
+
+</div>
+
+{{#js}}
+require(['jquery','block_cinfo/main'], function ($,cinfo) {
+    cinfo.init();
+});
+{{/js}}
