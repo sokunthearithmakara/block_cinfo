@@ -1,7 +1,7 @@
 /* eslint-disable */
 import $ from 'jquery';
 import Fragment from 'core/fragment';
-import Modal from 'core/modal';
+import ModalFactory from 'core/modal_factory';
 
 if ($("body.path-course-view div.course-content").length > 0) {
     var array = $("#modarray").data("modarray");
@@ -126,7 +126,7 @@ if ($("body.path-course-view div.course-content").length > 0) {
     // Handle course intro modal
     $(document).on("click", "#btn-courseinfo", function () {
         const contextid = $(this).data("contextid");
-        const modal = Modal.create({
+        const modal = ModalFactory.create({
             title: $("#courseinfo-title").html(),
             body: Fragment.loadFragment("block_cinfo", "course_intro", contextid, { contextid: contextid, parentcontextid: M.cfg.contextid}),
             show: true,
@@ -137,6 +137,5 @@ if ($("body.path-course-view div.course-content").length > 0) {
 }
 
 
-export const init = () => {
-};
+export const init = () => {};
 
