@@ -126,12 +126,15 @@ if ($("body.path-course-view div.course-content").length > 0) {
     // Handle course intro modal
     $(document).on("click", "#btn-courseinfo", function () {
         const contextid = $(this).data("contextid");
-        const modal = ModalFactory.create({
+        ModalFactory.create({
             title: $("#courseinfo-title").html(),
-            body: Fragment.loadFragment("block_cinfo", "course_intro", contextid, { contextid: contextid, parentcontextid: M.cfg.contextid}),
-            show: true,
+            body: Fragment.loadFragment("block_cinfo", "course_intro", contextid, { contextid: contextid, parentcontextid: M.cfg.contextid }),
             large: true,
+            show: false,
+            removeOnClose: true,
             isVerticallyCentered: true,
+        }).then(modal => {
+            modal.show();
         });
     });
 }
