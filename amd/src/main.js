@@ -7,6 +7,10 @@ if ($("body.path-course-view div.course-content").length > 0) {
     var array = $("#modarray").data("modarray");
     const tools = `<span id="cinfo-toolbar" class="d-block position-sticky">${$("#cinfo-wrapper").html()}</span>`;
     $(tools).insertBefore("div.course-content");
+    if ($("#cinfo-toolbar #toolbar").hasClass("m41")) {
+        $("#cinfo-toolbar").css("top", "0");
+    }
+
     $(".block_cinfo #cinfo-wrapper").remove();
 
     $(document).on("click", "#btn-search", function () {

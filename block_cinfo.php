@@ -68,6 +68,10 @@ class block_cinfo extends block_base {
         $datafortemplate = new stdClass();
         $datafortemplate->courseid = $this->page->course->id;
         $datafortemplate->contextid = $this->context->id;
+        $datafortemplate->moodleversion = "m44";
+        if ($CFG->version < 2023042400) {
+            $datafortemplate->moodleversion = "m41";
+        }
 
         // Course search.
         // Get all activities in the course and display them for a search box.
@@ -82,7 +86,7 @@ class block_cinfo extends block_base {
                 if (!$cm->uservisible || !$cm->has_view()) {
                     continue;
                 } else {
-                    $mod["name"] = format_text($cm->name, FORMAT_PLAIN);
+                    $mod["name"] = format_string($cm->name);
                     $mod["url"] = $cm->url->__toString();
                     $modname = $cm->modname;
                     $mod["icon"] = $OUTPUT->image_icon('monologo', get_string('pluginname', $modname), $modname);
