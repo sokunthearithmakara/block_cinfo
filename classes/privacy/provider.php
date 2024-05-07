@@ -31,6 +31,13 @@ use core_privacy\local\request\writer;
 use core_privacy\local\request\helper;
 use core_privacy\local\metadata\collection;
 
+/**
+ * Privacy Subsystem implementation for block_cinfo.
+ *
+ * @package    block_cinfo
+ * @copyright  2024 Sokunthearith Makara <sokunthearithmakara@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class provider implements
         // The block_cinfo block stores user provided data.
         \core_privacy\local\metadata\provider,
@@ -47,7 +54,7 @@ class provider implements
      * @param   collection     $collection The initialised collection to add items to.
      * @return  collection     A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         $collection->link_subsystem('block', 'privacy:metadata:block');
 
         return $collection;
@@ -59,9 +66,9 @@ class provider implements
      * @param   int         $userid     The user to search.
      * @return  contextlist   $contextlist  The contextlist containing the list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : \core_privacy\local\request\contextlist {
+    public static function get_contexts_for_userid(int $userid): \core_privacy\local\request\contextlist {
         // This block doesn't know who information is stored against unless it
-        // is at the user context.
+        // Is at the user context.
         $contextlist = new \core_privacy\local\request\contextlist();
 
         $sql = "SELECT c.id
@@ -90,7 +97,7 @@ class provider implements
      */
     public static function get_users_in_context(userlist $userlist) {
         // This block doesn't know who information is stored against unless it
-        // is at the user context.
+        // Is at the user context.
         $context = $userlist->get_context();
 
         if (!$context instanceof \context_block) {
@@ -153,7 +160,7 @@ class provider implements
                 ->rewrite_pluginfile_urls([], 'block_cinfo', 'content', null, $block->config->text);
 
             // Default to FORMAT_HTML which is what will have been used before the
-            // editor was properly implemented for the block.
+            // Editor was properly implemented for the block.
             $format = isset($block->config->format) ? $block->config->format : FORMAT_HTML;
 
             $filteropt = (object) [

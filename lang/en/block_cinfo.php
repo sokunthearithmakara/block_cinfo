@@ -1,5 +1,4 @@
 <?php
-use function Psy\sh;
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -20,16 +19,16 @@ use function Psy\sh;
  *
  * @package   block_cinfo
  * @copyright 2024 Sokunthearith Makara
- * @license   http://www.gnu.org/copyleft/gpl GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['cinfo:addinstance'] = 'Add a new Course extra UI block';
 $string['configcontent'] = 'Content';
 $string['configtitle'] = 'Course extra UI block title';
-$string['cinfo:addinstance'] = 'Add a new Course extra UI block';
 $string['newcinfoblock'] = '(new Course extra UI block)';
 $string['pluginname'] = 'Course extra UI';
-$string['search:content'] = 'Course extra UI block content';
 $string['privacy:metadata:block'] = 'The Course extra UI block stores all of its data within the block subsystem.';
+$string['search:content'] = 'Course extra UI block content';
 $string['label'] = 'Label';
 $string['aligncenter'] = 'Align content center';
 $string['showcoursesearch'] = 'Show course search';

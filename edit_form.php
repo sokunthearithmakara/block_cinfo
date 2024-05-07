@@ -22,7 +22,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * block_cinfo_edit_form class.
+ */
 class block_cinfo_edit_form extends block_edit_form {
+    /**
+     * Define the form.
+     */
     protected function specific_definition($mform) {
         $this->page->add_body_class('mediumwidth');
 
@@ -128,6 +134,11 @@ class block_cinfo_edit_form extends block_edit_form {
         $mform->setType('config_folderlink', PARAM_TEXT);
     }
 
+    /**
+     * Set the default data for the form.
+     *
+     * @param stdClass $defaults
+     */
     public function set_data($defaults) {
         if (!empty($this->block->config) && !empty($this->block->config->text)) {
             $text = $this->block->config->text;

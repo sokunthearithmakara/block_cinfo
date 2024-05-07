@@ -16,36 +16,62 @@
 
 /**
  *
- *
  * @package   block_cinfo
  * @copyright 2024 Sokunthearith Makara
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace block_cinfo;
 use core_completion\progress;
+use stdClass;
 
-class block_cinfo extends block_base {
+/**
+ * Block class
+ */
+class block_cinfo extends \block_base {
 
+    /**
+     * Initialize the block
+     */
     public function init() {
         $this->title = get_string('pluginname', 'block_cinfo');
     }
 
+    /**
+     * Allow the block to have a configuration page
+     * @return bool
+     */
     public function has_config() {
         return true;
     }
 
+    /**
+     * Allow the block to be added to the course page
+     * @return array
+     */
     public function applicable_formats() {
         return ['all' => false, 'course' => true];
     }
 
+    /**
+     * Set the title of the block
+     */
     public function specialization() {
         $this->title = get_string('pluginname', 'block_cinfo');
     }
 
+    /**
+     * Allow only one instance of the block
+     * @return bool
+     */
     public function instance_allow_multiple() {
         return false;
     }
 
+    /**
+     * Get the content of the block
+     * @return stdClass
+     */
     public function get_content() {
         global $CFG, $OUTPUT, $USER;
 
@@ -64,7 +90,6 @@ class block_cinfo extends block_base {
 
         $this->content = new stdClass;
         $this->content->footer = '';
-
         $datafortemplate = new stdClass();
         $datafortemplate->courseid = $this->page->course->id;
         $datafortemplate->contextid = $this->context->id;
@@ -106,12 +131,13 @@ class block_cinfo extends block_base {
         if (!$datafortemplate->searchexpand && $this->page->course->enablecompletion
         && $this->config && is_enrolled($this->context)) {
             if ($this->config->showprogress == 1) {
-                $percentage = floor(progress::get_course_progress_percentage($this->page->course));
+                $progress = progress::get_course_progress_percentage($this->page->course);
+                $percentage = floor($progress ?? 0);
                 // If course has completion criteria, link to the course completion report.
-                $info = new completion_info($this->page->course);
+                $info = new \completion_info($this->page->course);
                 $datafortemplate->showprogress = true;
                 $datafortemplate->progress = $percentage;
-                $datafortemplate->progressurl = new moodle_url('/blocks/completionstatus/details.php',
+                $datafortemplate->progressurl = new \moodle_url('/blocks/completionstatus/details.php',
                 ['course' => $this->page->course->id]);
                 $datafortemplate->hascriteria = $info->is_enabled() && $info->has_criteria();
             }
@@ -122,7 +148,7 @@ class block_cinfo extends block_base {
         // and user has the capability to see grades, then show the grade with link to the grade report for the user.
         if (!$datafortemplate->searchexpand && $this->config && isset($this->config->showgrade) && $this->config->showgrade == 1
         && $this->page->course->showgrades
-        && has_capability('moodle/grade:view', context_course::instance($this->page->course->id))) {
+        && has_capability('moodle/grade:view', \context_course::instance($this->page->course->id))) {
             require_once($CFG->libdir . '/gradelib.php');
             require_once($CFG->dirroot . '/grade/querylib.php');
             $gradeobj = grade_get_course_grade($USER->id, $this->page->course->id);
@@ -135,7 +161,7 @@ class block_cinfo extends block_base {
 
             $datafortemplate->showgrade = true;
             $datafortemplate->grade = $grade;
-            $datafortemplate->gradeurl = new moodle_url('/grade/report/user/index.php', ['id' => $this->page->course->id]);
+            $datafortemplate->gradeurl = new \moodle_url('/grade/report/user/index.php', ['id' => $this->page->course->id]);
         }
 
         // Course info.
@@ -170,7 +196,7 @@ class block_cinfo extends block_base {
                 $datafortemplate->shownews = false;
             }
 
-            $context = context_module::instance($cm->id);
+            $context = \context_module::instance($cm->id);
 
             // User must have perms to view discussions in that forum.
             if (!has_capability('mod/forum:viewdiscussion', $context)) {
@@ -192,7 +218,7 @@ class block_cinfo extends block_base {
         if (!$datafortemplate->searchexpand && $this->page->course->showreports
         && isset($this->config->showactivityreport) && $this->config->showactivityreport) {
             $datafortemplate->showreport = true;
-            $datafortemplate->reporturl = new moodle_url('/report/outline/user.php',
+            $datafortemplate->reporturl = new \moodle_url('/report/outline/user.php',
             ['course' => $this->page->course->id, 'mode' => 'complete', 'id' => $USER->id]);
         }
 
@@ -235,9 +261,11 @@ class block_cinfo extends block_base {
         return $this->content;
     }
 
-
     /**
      * Serialize and store config data
+     * @param stdClass $data
+     * @param bool $nolongerused
+     * @return bool
      */
     public function instance_config_save($data, $nolongerused = false) {
 
@@ -250,6 +278,10 @@ class block_cinfo extends block_base {
         parent::instance_config_save($config, $nolongerused);
     }
 
+    /**
+     * Delete any block-specific data when deleting a block instance.
+     * @return bool
+     */
     public function instance_delete() {
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_cinfo');
@@ -262,7 +294,7 @@ class block_cinfo extends block_base {
      * @return boolean
      */
     public function instance_copy($fromid) {
-        $fromcontext = context_block::instance($fromid);
+        $fromcontext = \context_block::instance($fromid);
         $fs = get_file_storage();
         // This extra check if file area is empty adds one query if it is not empty but saves several if it is.
         if (!$fs->is_area_empty($fromcontext->id, 'block_cinfo', 'content', 0, false)) {
@@ -273,9 +305,13 @@ class block_cinfo extends block_base {
         return true;
     }
 
+    /**
+     * Check if the content is trusted
+     * @return bool
+     */
     public function content_is_trusted() {
 
-        if (!context::instance_by_id($this->instance->parentcontextid, IGNORE_MISSING)) {
+        if (!\context::instance_by_id($this->instance->parentcontextid, IGNORE_MISSING)) {
             return false;
         }
 

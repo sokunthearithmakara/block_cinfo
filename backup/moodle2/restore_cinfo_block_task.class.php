@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package     block_cinfo
- * @subpackage  backup-moodle2
- * @copyright   2024 Sokunthearith Makara <sokunthearithmakara@gmail.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Specialised restore task for the cinfo block
+ *
+ * @package   block_cinfo
+ * @copyright 2024 Sokunthearith Makara
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -28,20 +29,35 @@ defined('MOODLE_INTERNAL') || die();
  */
 class restore_cinfo_block_task extends restore_block_task {
 
+    /**
+     * Define settings
+     */
     protected function define_my_settings() {
     }
 
+    /**
+     * Define the structure of cinfo block
+     */
     protected function define_my_steps() {
     }
 
+    /**
+     * Define the contents of cinfo block
+     */
     public function get_fileareas() {
         return ['content'];
     }
 
+    /**
+     * Get configuration data encoded attributes
+     */
     public function get_configdata_encoded_attributes() {
         return ['text']; // We need to encode some attrs in configdata.
     }
 
+    /**
+     * Decode content links
+     */
     public static function define_decode_contents() {
 
         $contents = [];
@@ -51,6 +67,9 @@ class restore_cinfo_block_task extends restore_block_task {
         return $contents;
     }
 
+    /**
+     * Define the decode rules for cinfo block
+     */
     public static function define_decode_rules() {
         return [];
     }
@@ -63,8 +82,15 @@ class restore_cinfo_block_task extends restore_block_task {
  */
 class restore_cinfo_block_decode_content extends restore_decode_content {
 
+    /**
+     * Temp storage for unserialized configdata.
+     * @var object
+     */
     protected $configdata; // Temp storage for unserialized configdata.
 
+    /**
+     * Get the iterator for the cinfo block
+     */
     protected function get_iterator() {
         global $DB;
 
@@ -80,11 +106,19 @@ class restore_cinfo_block_decode_content extends restore_decode_content {
         return ($DB->get_recordset_sql($sql, $params));
     }
 
+    /**
+     * Preprocess the field
+     * @param string $field The field to preprocess
+     */
     protected function preprocess_field($field) {
         $this->configdata = unserialize_object(base64_decode($field));
         return isset($this->configdata->text) ? $this->configdata->text : '';
     }
 
+    /**
+     * Postprocess the field
+     * @param string $field The field to postprocess
+     */
     protected function postprocess_field($field) {
         $this->configdata->text = $field;
         return base64_encode(serialize($this->configdata));

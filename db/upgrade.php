@@ -19,7 +19,7 @@
  *
  * @package block_cinfo
  * @copyright 2024 Sokunthearith Makara
- * @license http://www.gnu.org/copyleft/gpl.cinfo GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 

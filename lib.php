@@ -20,6 +20,10 @@
  * @copyright 2024 Sokunthearith Makara
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package   block_cinfo
+ */
+
+/**
+ * Get files
  * @category  files
  * @param stdClass $course course object
  * @param stdClass $birecordorcm block instance record
@@ -54,7 +58,7 @@ function block_cinfo_pluginfile($course, $birecordorcm, $context, $filearea, $ar
     $filename = array_pop($args);
     $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
 
-    if (!$file = $fs->get_file($context->id, 'block_cinfo', 'content', 0, $filepath, $filename) or $file->is_directory()) {
+    if (!$file = $fs->get_file($context->id, 'block_cinfo', 'content', 0, $filepath, $filename) || $file->is_directory()) {
         send_file_not_found();
     }
 
@@ -64,9 +68,10 @@ function block_cinfo_pluginfile($course, $birecordorcm, $context, $filearea, $ar
 
 /**
  * Perform global search replace such as when migrating site to new URL.
- * @param  $search
- * @param  $replace
+ * @param  string $search
+ * @param  string $replace
  * @return void
+ * @package block_cinfo
  */
 function block_cinfo_global_db_replace($search, $replace) {
     global $DB;
@@ -87,11 +92,12 @@ function block_cinfo_global_db_replace($search, $replace) {
 /**
  * Given an array with a file path, it returns the itemid and the filepath for the defined filearea.
  *
- * @param  string $filearea The filearea.
- * @param  array  $args The path (the part after the filearea and before the filename).
- * @return array The itemid and the filepath inside the $args path, for the defined filearea.
+ * @param string $filearea The filearea.
+ * @param array  $args The path (the part after the filearea and before the filename).
+ * @return array
+ * @package block_cinfo
  */
-function block_cinfo_get_path_from_pluginfile(string $filearea, array $args) : array {
+function block_cinfo_get_path_from_pluginfile(string $filearea, array $args): array {
     // This block never has an itemid (the number represents the revision but it's not stored in database).
     array_shift($args);
 
@@ -108,6 +114,12 @@ function block_cinfo_get_path_from_pluginfile(string $filearea, array $args) : a
     ];
 }
 
+/**
+ * Output the content of the block.
+ *
+ * @param array $arg the argument
+ * @return string the content
+ */
 function block_cinfo_output_fragment_course_intro ($arg) {
     global $DB;
     $parentcontextid = $arg['parentcontextid'];
