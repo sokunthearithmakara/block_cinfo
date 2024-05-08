@@ -28,6 +28,7 @@
 class block_cinfo_edit_form extends block_edit_form {
     /**
      * Define the form.
+     * @param moodleform $mform
      */
     protected function specific_definition($mform) {
         $this->page->add_body_class('mediumwidth');

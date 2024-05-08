@@ -55,6 +55,7 @@ class backup_cinfo_block_task extends backup_block_task {
 
     /**
      * Encode content links
+     * @param string $content
      */
     public static function encode_content_links($content) {
         return $content; // No special encoding of links.
