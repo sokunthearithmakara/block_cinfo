@@ -16,7 +16,7 @@
 /**
  * Manager for the accessreview block.
  *
- * @module      block_cinfo/main
+ * @module      block_cinfo/mainscript
  * @author      Sokunthearith Makara <sokunthearithmakara@gmail.com>
  * @copyright   2024 Sokunthearith Makara <sokunthearithmakara@gmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
