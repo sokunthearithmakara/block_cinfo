@@ -26,7 +26,6 @@ import $ from 'jquery';
 import Fragment from 'core/fragment';
 import ModalFactory from 'core/modal_factory';
 
-
 export const init = () => {
     if ($("body.path-course-view div.course-content").length > 0) {
         var array = $("#modarray").data("modarray");
