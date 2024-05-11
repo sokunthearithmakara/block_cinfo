@@ -21,14 +21,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_cinfo;
 use core_completion\progress;
-use stdClass;
 
 /**
  * Block class
  */
-class block_cinfo extends \block_base {
+class block_cinfo extends block_base {
 
     /**
      * Initialize the block
@@ -134,10 +132,10 @@ class block_cinfo extends \block_base {
                 $progress = progress::get_course_progress_percentage($this->page->course);
                 $percentage = floor($progress ?? 0);
                 // If course has completion criteria, link to the course completion report.
-                $info = new \completion_info($this->page->course);
+                $info = new completion_info($this->page->course);
                 $datafortemplate->showprogress = true;
                 $datafortemplate->progress = $percentage;
-                $datafortemplate->progressurl = new \moodle_url('/blocks/completionstatus/details.php',
+                $datafortemplate->progressurl = new moodle_url('/blocks/completionstatus/details.php',
                 ['course' => $this->page->course->id]);
                 $datafortemplate->hascriteria = $info->is_enabled() && $info->has_criteria();
             }
@@ -148,7 +146,7 @@ class block_cinfo extends \block_base {
         // and user has the capability to see grades, then show the grade with link to the grade report for the user.
         if (!$datafortemplate->searchexpand && $this->config && isset($this->config->showgrade) && $this->config->showgrade == 1
         && $this->page->course->showgrades
-        && has_capability('moodle/grade:view', \context_course::instance($this->page->course->id))) {
+        && has_capability('moodle/grade:view', context_course::instance($this->page->course->id))) {
             require_once($CFG->libdir . '/gradelib.php');
             require_once($CFG->dirroot . '/grade/querylib.php');
             $gradeobj = grade_get_course_grade($USER->id, $this->page->course->id);
@@ -161,7 +159,7 @@ class block_cinfo extends \block_base {
 
             $datafortemplate->showgrade = true;
             $datafortemplate->grade = $grade;
-            $datafortemplate->gradeurl = new \moodle_url('/grade/report/user/index.php', ['id' => $this->page->course->id]);
+            $datafortemplate->gradeurl = new moodle_url('/grade/report/user/index.php', ['id' => $this->page->course->id]);
         }
 
         // Course info.
@@ -196,7 +194,7 @@ class block_cinfo extends \block_base {
                 $datafortemplate->shownews = false;
             }
 
-            $context = \context_module::instance($cm->id);
+            $context = context_module::instance($cm->id);
 
             // User must have perms to view discussions in that forum.
             if (!has_capability('mod/forum:viewdiscussion', $context)) {
@@ -218,7 +216,7 @@ class block_cinfo extends \block_base {
         if (!$datafortemplate->searchexpand && $this->page->course->showreports
         && isset($this->config->showactivityreport) && $this->config->showactivityreport) {
             $datafortemplate->showreport = true;
-            $datafortemplate->reporturl = new \moodle_url('/report/outline/user.php',
+            $datafortemplate->reporturl = new moodle_url('/report/outline/user.php',
             ['course' => $this->page->course->id, 'mode' => 'complete', 'id' => $USER->id]);
         }
 
@@ -294,7 +292,7 @@ class block_cinfo extends \block_base {
      * @return boolean
      */
     public function instance_copy($fromid) {
-        $fromcontext = \context_block::instance($fromid);
+        $fromcontext = context_block::instance($fromid);
         $fs = get_file_storage();
         // This extra check if file area is empty adds one query if it is not empty but saves several if it is.
         if (!$fs->is_area_empty($fromcontext->id, 'block_cinfo', 'content', 0, false)) {
@@ -311,7 +309,7 @@ class block_cinfo extends \block_base {
      */
     public function content_is_trusted() {
 
-        if (!\context::instance_by_id($this->instance->parentcontextid, IGNORE_MISSING)) {
+        if (!context::instance_by_id($this->instance->parentcontextid, IGNORE_MISSING)) {
             return false;
         }
 

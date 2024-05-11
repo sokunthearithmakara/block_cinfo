@@ -105,7 +105,7 @@ body:not(.editing) section.block_cinfo {
     color: #fff;
 }
 
-#cinfo-block-search .input-group>.form-control {
+#cinfo-block-search .input-group > .form-control {
     border-color: #dfdfdf;
     border-radius: 3rem;
     position: relative;
