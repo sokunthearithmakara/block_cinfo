@@ -99,6 +99,7 @@ class block_cinfo extends block_base {
         // Course search.
         // Get all activities in the course and display them for a search box.
         // If the course search is set to be shown expanded, then show it expanded.
+        $datafortemplate->searchexpand = false;
         if (!isset($this->config->coursesearch) || $this->config->coursesearch) {
             $modinfo = get_fast_modinfo($this->page->course);
             $modarray = [];
