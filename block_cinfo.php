@@ -92,7 +92,7 @@ class block_cinfo extends block_base {
         $datafortemplate->courseid = $this->page->course->id;
         $datafortemplate->contextid = $this->context->id;
         $datafortemplate->moodleversion = "m44";
-        if ($CFG->version < 2023042400) {
+        if ($CFG->version < 2023100900) {
             $datafortemplate->moodleversion = "m41";
         }
 
