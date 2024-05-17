@@ -66,12 +66,13 @@
     min-height: 65px;
 }
 
-#cinfo-toolbar > div {
+#cinfo-toolbar>div {
     overflow-x: auto;
 }
 
 #cinfo-toolbar .scrollbar-0 {
     scrollbar-width: none;
+    scroll-snap-type: x mandatory;
 }
 
 #cinfo-block-search.autocomplete {
@@ -98,6 +99,7 @@ body:not(.editing) section.block_cinfo {
     align-items: center;
     height: 30px;
     margin-right: 0.2rem;
+    scroll-snap-align: start;
 }
 
 .cinfo-btn:hover {
@@ -105,7 +107,7 @@ body:not(.editing) section.block_cinfo {
     color: #fff;
 }
 
-#cinfo-block-search .input-group > .form-control {
+#cinfo-block-search .input-group>.form-control {
     border-color: #dfdfdf;
     border-radius: 3rem;
     position: relative;
@@ -145,4 +147,5 @@ body:not(.editing) section.block_cinfo {
 
 .cinfo-btn .icon {
     margin-right: 0;
+    max-width: 16px;
 }

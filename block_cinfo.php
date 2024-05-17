@@ -248,6 +248,8 @@ class block_cinfo extends block_base {
             $datafortemplate->foldertype = $this->config->foldertype;
         }
 
+        $datafortemplate->aligncenter = (!isset($this->config->aligncenter) || $this->config->aligncenter) ? true : false;
+
         $textcenter = !isset($this->config->aligncenter) || $this->config->aligncenter ? 'text-center' : '';
         $text = '<div id="cinfo-wrapper" class="d-none">
         <div class="text-nowrap ' . $textcenter . ' scrollbar-0 p-0">'
