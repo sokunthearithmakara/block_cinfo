@@ -107,11 +107,11 @@ class block_cinfo extends block_base {
                 $mod = [];
                 // Exclude activities that aren't visible or have no view link (e.g. label).
                 // Account for folder being displayed inline.
-                if (!$cm->uservisible || !$cm->has_view()) {
+                if (!$cm->uservisible) {
                     continue;
                 } else {
                     $mod["name"] = format_string($cm->name);
-                    $mod["url"] = $cm->url->__toString();
+                    $mod["url"] = isset($cm->url) ? $cm->url->__toString() : '#module-' . $cm->id;
                     $modname = $cm->modname;
                     $mod["icon"] = $OUTPUT->image_icon('monologo', get_string('pluginname', $modname), $modname);
                 }
@@ -249,6 +249,11 @@ class block_cinfo extends block_base {
         }
 
         $datafortemplate->aligncenter = (!isset($this->config->aligncenter) || $this->config->aligncenter) ? true : false;
+
+        // Bootstrap 5
+        if ($CFG->branch >= 405) {
+            $datafortemplate->bs = '-bs';
+        }
 
         $textcenter = !isset($this->config->aligncenter) || $this->config->aligncenter ? 'text-center' : '';
         $text = '<div id="cinfo-wrapper" class="d-none">

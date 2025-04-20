@@ -28,6 +28,7 @@ import ModalFactory from 'core/modal_factory';
 
 export const init = () => {
     if ($("body.path-course-view div.course-content").length > 0) {
+        $('body').addClass('has-cinfo');
         var array = $("#modarray").data("modarray");
         const tools = `<span id="cinfo-toolbar" class="d-block position-sticky">${$("#cinfo-wrapper").html()}</span>`;
         $(tools).insertBefore("div.course-content");
@@ -64,7 +65,7 @@ export const init = () => {
                 var searchResultsHTML = "";
                 if (searchResults.length > 0) {
                     searchResults.forEach(function(item, index) {
-                        searchResultsHTML += `<a class="list-group-item px-2 py-1 text-left ${index == 0 ? "active" : ""}"
+                        searchResultsHTML += `<a class="list-group-item py-1  ${index == 0 ? "active" : ""}"
             href="${item.url}">${item.icon}${item.name}</a>`;
                     });
                 } else {
@@ -73,6 +74,24 @@ export const init = () => {
                 $("#searchresults").html(searchResultsHTML);
             } else {
                 $("#searchresults").html("");
+            }
+        });
+
+        $(document).on("click", "#searchresults a.list-group-item", function() {
+            // Close the search results when the user clicks on a result.
+            $("#cinfo-block-search .input-group-append").trigger("click");
+            if ($(this).attr("href").includes("#module-")) {
+                window.console.log(true);
+                let $this = $(this);
+                setTimeout(function() {
+                    // Add class active.
+                    $(`li.activity${$this.attr("href")}`).addClass("active");
+
+                    // Remove active class after 1 second.
+                    setTimeout(function() {
+                        $(`li.activity${$this.attr("href")}`).removeClass("active");
+                    }, 2000);
+                }, 1000);
             }
         });
 

@@ -23,9 +23,9 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->release = 'v1.0.1';
-$plugin->version   = 2024101006;
+$plugin->release = 'v1.0.2';
+$plugin->version   = 2025042100;
 $plugin->requires  = 2022111800;
 $plugin->component = 'block_cinfo';
-$plugin->supported = [401, 405];
+$plugin->supported = [401, 500];
 $plugin->maturity = MATURITY_STABLE;

@@ -1,3 +1,7 @@
+#cinfo-toolbar {
+    --primary: #0f6cbf;
+}
+
 #cinfo-toolbar .scrollnav {
     position: absolute;
     display: flex;
@@ -49,6 +53,11 @@
     white-space: nowrap;
     max-height: 200px;
     overflow-y: auto;
+}
+
+#cinfo-block-search .list-group-item {
+    text-align: left;
+    padding-left: 1rem;
 }
 
 #cinfo-toolbar {
@@ -148,4 +157,8 @@ body:not(.editing) section.block_cinfo {
 .cinfo-btn .icon {
     margin-right: 0;
     max-width: 16px;
+}
+
+.has-cinfo li.activity.active {
+    border: 1px solid #0f6cbf;
 }
