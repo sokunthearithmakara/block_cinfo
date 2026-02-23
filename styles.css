@@ -75,7 +75,7 @@
     min-height: 65px;
 }
 
-#cinfo-toolbar>div {
+#cinfo-toolbar > div {
     overflow-x: auto;
 }
 
@@ -116,7 +116,7 @@ body:not(.editing) section.block_cinfo {
     color: #fff;
 }
 
-#cinfo-block-search .input-group>.form-control {
+#cinfo-block-search .input-group > .form-control {
     border-color: #dfdfdf;
     border-radius: 3rem;
     position: relative;
@@ -161,4 +161,9 @@ body:not(.editing) section.block_cinfo {
 
 .has-cinfo li.activity.active {
     border: 1px solid #0f6cbf;
+}
+
+#searchresults img {
+    width: auto;
+    height: 24px;
 }

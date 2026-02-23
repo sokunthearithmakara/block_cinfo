@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * Specialised restore task for the block
  */
 class restore_cinfo_block_task extends restore_block_task {
-
     /**
      * Define settings
      */
@@ -81,7 +80,6 @@ class restore_cinfo_block_task extends restore_block_task {
  * packaging it back to its serialized form after process
  */
 class restore_cinfo_block_decode_content extends restore_decode_content {
-
     /**
      * Temp storage for unserialized configdata.
      * @var object

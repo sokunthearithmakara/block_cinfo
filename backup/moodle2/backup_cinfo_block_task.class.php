@@ -61,4 +61,3 @@ class backup_cinfo_block_task extends backup_block_task {
         return $content; // No special encoding of links.
     }
 }
-

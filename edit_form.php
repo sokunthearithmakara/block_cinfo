@@ -34,51 +34,105 @@ class block_cinfo_edit_form extends block_edit_form {
         $this->page->add_body_class('mediumwidth');
 
         // Show search.
-        $mform->addElement('advcheckbox', 'config_coursesearch', '',
-        get_string('showcoursesearch', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_coursesearch',
+            '',
+            get_string('showcoursesearch', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_coursesearch', 1);
         $mform->addHelpButton('config_coursesearch', 'showcoursesearch', 'block_cinfo');
 
         // Show search expand.
-        $mform->addElement('advcheckbox', 'config_showsearchexpand', '',
-        get_string('showsearchexpand', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_showsearchexpand',
+            '',
+            get_string('showsearchexpand', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_showsearchexpand', 0);
         $mform->addHelpButton('config_showsearchexpand', 'showsearchexpand', 'block_cinfo');
+        $mform->hideIf('config_showsearchexpand', 'config_coursesearch', 'neq', 1);
 
         // Show progress.
-        $mform->addElement('advcheckbox', 'config_showprogress', '',
-        get_string('showprogress', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_showprogress',
+            '',
+            get_string('showprogress', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_showprogress', 1);
         $mform->addHelpButton('config_showprogress', 'showprogress', 'block_cinfo');
+        $mform->hideIf('config_showprogress', 'config_showsearchexpand', 'eq', 1);
 
         // Show grade.
-        $mform->addElement('advcheckbox', 'config_showgrade', '',
-        get_string('showgrade', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_showgrade',
+            '',
+            get_string('showgrade', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_showgrade', 1);
         $mform->addHelpButton('config_showgrade', 'showgrade', 'block_cinfo');
+        $mform->hideIf('config_showgrade', 'config_showsearchexpand', 'eq', 1);
 
         // Show course news.
-        $mform->addElement('advcheckbox', 'config_shownews', '',
-        get_string('shownews', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_shownews',
+            '',
+            get_string('shownews', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_shownews', 0);
         $mform->addHelpButton('config_shownews', 'shownews', 'block_cinfo');
+        $mform->hideIf('config_shownews', 'config_showsearchexpand', 'eq', 1);
 
         // Show activity report.
-        $mform->addElement('advcheckbox', 'config_showactivityreport', '',
-        get_string('showactivityreport', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_showactivityreport',
+            '',
+            get_string('showactivityreport', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_showactivityreport', 0);
         $mform->addHelpButton('config_showactivityreport', 'showactivityreport', 'block_cinfo');
+        $mform->hideIf('config_showactivityreport', 'config_showsearchexpand', 'eq', 1);
 
         // Align items center.
-        $mform->addElement('advcheckbox', 'config_aligncenter', '',
-        get_string('aligncenter', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_aligncenter',
+            '',
+            get_string('aligncenter', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
         $mform->setDefault('config_aligncenter', 1);
         $mform->addHelpButton('config_aligncenter', 'aligncenter', 'block_cinfo');
+        $mform->hideIf('config_aligncenter', 'config_showsearchexpand', 'eq', 1);
 
         // Course info section.
         $mform->addElement('header', 'configheader', get_string('courseinfo', 'block_cinfo'));
-        $mform->addElement('advcheckbox', 'config_showcourseinfo', '',
-        get_string('showcourseinfo', 'block_cinfo'), null, [0, 1]);
+        $mform->addElement(
+            'advcheckbox',
+            'config_showcourseinfo',
+            '',
+            get_string('showcourseinfo', 'block_cinfo'),
+            null,
+            [0, 1]
+        );
 
         $mform->addElement('text', 'config_title', get_string('label', 'block_cinfo'), ['size' => '100']);
         $mform->setType('config_title', PARAM_TEXT);
@@ -149,8 +203,15 @@ class block_cinfo_edit_form extends block_edit_form {
             } else {
                 $currenttext = $text;
             }
-            $defaults->config_text['text'] = file_prepare_draft_area($draftideditor, $this->block->context->id,
-            'block_cinfo', 'content', 0, ['subdirs' => true], $currenttext);
+            $defaults->config_text['text'] = file_prepare_draft_area(
+                $draftideditor,
+                $this->block->context->id,
+                'block_cinfo',
+                'content',
+                0,
+                ['subdirs' => true],
+                $currenttext
+            );
             $defaults->config_text['itemid'] = $draftideditor;
             $defaults->config_text['format'] = $this->block->config->format ?? FORMAT_MOODLE;
         } else {

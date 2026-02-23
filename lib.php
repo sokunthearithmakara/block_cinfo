@@ -35,7 +35,7 @@
  * @return bool
  * @todo MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-function block_cinfo_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=[]) {
+function block_cinfo_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $CFG;
 
     if ($context->contextlevel != CONTEXT_BLOCK) {
@@ -82,8 +82,11 @@ function block_cinfo_global_db_replace($search, $replace) {
         $config = unserialize_object(base64_decode($instance->configdata));
         if (isset($config->text) && is_string($config->text)) {
             $config->text = str_replace($search, $replace, $config->text);
-            $DB->update_record('block_instances', ['id' => $instance->id,
-                    'configdata' => base64_encode(serialize($config)), 'timemodified' => time()]);
+            $DB->update_record('block_instances', [
+                'id' => $instance->id,
+                'configdata' => base64_encode(serialize($config)),
+                'timemodified' => time()
+            ]);
         }
     }
     $instances->close();
@@ -120,7 +123,7 @@ function block_cinfo_get_path_from_pluginfile(string $filearea, array $args): ar
  * @param array $arg the argument
  * @return string the content
  */
-function block_cinfo_output_fragment_course_intro ($arg) {
+function block_cinfo_output_fragment_course_intro($arg) {
     global $DB;
     $parentcontextid = $arg['parentcontextid'];
     $contextid = $arg['contextid'];

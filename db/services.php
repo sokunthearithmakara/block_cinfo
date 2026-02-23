@@ -15,17 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * External functions and service declaration for Course extra UI
+ *
+ * Documentation: {@link https://moodledev.io/docs/apis/subsystems/external/description}
  *
  * @package    block_cinfo
- * @copyright  2024 Sokunthearith Makara
+ * @category   webservice
+ * @copyright  2026 Sokunthearith Makara <sokunthearithmakara@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->release = 'v1.1';
-$plugin->version   = 2025042102;
-$plugin->requires  = 2022111800;
-$plugin->component = 'block_cinfo';
-$plugin->supported = [401, 502];
-$plugin->maturity = MATURITY_STABLE;
+
+$functions = [
+    'block_cinfo_filter' => [
+        'classname' => 'block_cinfo\external\filter',
+        'methodname' => 'execute',
+        'description' => 'Filter the course info',
+        'type' => 'read',
+        'ajax' => true,
+    ],
+];

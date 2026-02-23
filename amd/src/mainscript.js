@@ -23,10 +23,16 @@
  */
 
 import $ from 'jquery';
-import Fragment from 'core/fragment';
-import ModalFactory from 'core/modal_factory';
-
-export const init = () => {
+import Ajax from 'core/ajax';
+import {notifyFilterContentUpdated} from 'core_filters/events';
+import ModalEvents from 'core/modal_events';
+export const init = async() => {
+    let ModalFactory;
+    try {
+        ModalFactory = await import('core/modal_factory');
+    } catch (error) {
+        ModalFactory = await import('core/modal');
+    }
     if ($("body.path-course-view div.course-content").length > 0) {
         $('body').addClass('has-cinfo');
         var array = $("#modarray").data("modarray");
@@ -81,7 +87,6 @@ export const init = () => {
             // Close the search results when the user clicks on a result.
             $("#cinfo-block-search .input-group-append").trigger("click");
             if ($(this).attr("href").includes("#module-")) {
-                window.console.log(true);
                 let $this = $(this);
                 setTimeout(function() {
                     // Add class active.
@@ -171,21 +176,38 @@ export const init = () => {
         $(window).on('resize', checkScroll);
 
         // Handle course intro modal
-        $(document).on("click", "#btn-courseinfo", function() {
+        $(document).on("click", "#btn-courseinfo", async function() {
             const contextid = $(this).data("contextid");
-            ModalFactory.create({
+            const request = {
+                methodname: 'block_cinfo_filter',
+                args: {
+                    contextid: contextid,
+                    parentcontextid: M.cfg.contextid,
+                }
+            };
+
+            let content = await Ajax.call([request])[0];
+
+            let modal = await ModalFactory.create({
                 title: $("#courseinfo-title").html(),
-                body: Fragment.loadFragment("block_cinfo", "course_intro", contextid,
-                    {contextid: contextid, parentcontextid: M.cfg.contextid}),
+                body: '',
                 large: true,
                 show: false,
                 removeOnClose: true,
                 isVerticallyCentered: true,
-            }).then(modal => {
-                modal.show();
-                return;
-            }).fail(() => {
-                return;
+            });
+            let $root = await modal.getRoot();
+            let root = $root[0];
+
+            modal.show();
+
+            $root.on(ModalEvents.shown, () => {
+                modal.setBody(content.content);
+                notifyFilterContentUpdated(root);
+            });
+
+            $root.on(ModalEvents.hidden, () => {
+                modal.destroy();
             });
         });
     }

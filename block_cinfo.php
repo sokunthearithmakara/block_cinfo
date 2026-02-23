@@ -27,7 +27,6 @@ use core_completion\progress;
  * Block class
  */
 class block_cinfo extends block_base {
-
     /**
      * Initialize the block
      */
@@ -79,14 +78,14 @@ class block_cinfo extends block_base {
             return $this->content;
         }
 
-        $filteropt = new stdClass;
+        $filteropt = new stdClass();
         $filteropt->overflowdiv = true;
         if ($this->content_is_trusted()) {
             // Fancy html allowed only on course, category and system blocks.
             $filteropt->noclean = true;
         }
 
-        $this->content = new stdClass;
+        $this->content = new stdClass();
         $this->content->footer = '';
         $datafortemplate = new stdClass();
         $datafortemplate->courseid = $this->page->course->id;
@@ -111,7 +110,8 @@ class block_cinfo extends block_base {
                     continue;
                 } else {
                     $mod["name"] = format_string($cm->name);
-                    $mod["url"] = isset($cm->url) ? $cm->url->__toString() : '#module-' . $cm->id;
+                    $mod["url"] = isset($cm->url) ? $cm->url->__toString() :
+                        $CFG->wwwroot . '/mod/' . $cm->modname . '/view.php?id=' . $cm->id;
                     $modname = $cm->modname;
                     $mod["icon"] = $OUTPUT->image_icon('monologo', get_string('pluginname', $modname), $modname);
                 }
@@ -127,8 +127,10 @@ class block_cinfo extends block_base {
         // If course completion is enabled in the course settings.
         // and the block is configured to show progress, then show the progress bar.
         // If the course has completion criteria, then link to the course completion report.
-        if (!$datafortemplate->searchexpand && $this->page->course->enablecompletion
-        && $this->config && is_enrolled($this->context)) {
+        if (
+            !$datafortemplate->searchexpand && $this->page->course->enablecompletion
+            && $this->config && is_enrolled($this->context)
+        ) {
             if ($this->config->showprogress == 1) {
                 $progress = progress::get_course_progress_percentage($this->page->course);
                 $percentage = floor($progress ?? 0);
@@ -136,8 +138,10 @@ class block_cinfo extends block_base {
                 $info = new completion_info($this->page->course);
                 $datafortemplate->showprogress = true;
                 $datafortemplate->progress = $percentage;
-                $datafortemplate->progressurl = new moodle_url('/blocks/completionstatus/details.php',
-                ['course' => $this->page->course->id]);
+                $datafortemplate->progressurl = new moodle_url(
+                    '/blocks/completionstatus/details.php',
+                    ['course' => $this->page->course->id]
+                );
                 $datafortemplate->hascriteria = $info->is_enabled() && $info->has_criteria();
             }
         }
@@ -145,9 +149,11 @@ class block_cinfo extends block_base {
         // Course grade.
         // If showgrades is enabled in the course settings and the block is configured to show grades
         // and user has the capability to see grades, then show the grade with link to the grade report for the user.
-        if (!$datafortemplate->searchexpand && $this->config && isset($this->config->showgrade) && $this->config->showgrade == 1
-        && $this->page->course->showgrades
-        && has_capability('moodle/grade:view', context_course::instance($this->page->course->id))) {
+        if (
+            !$datafortemplate->searchexpand && $this->config && isset($this->config->showgrade) && $this->config->showgrade == 1
+            && $this->page->course->showgrades
+            && has_capability('moodle/grade:view', context_course::instance($this->page->course->id))
+        ) {
             require_once($CFG->libdir . '/gradelib.php');
             require_once($CFG->dirroot . '/grade/querylib.php');
             $gradeobj = grade_get_course_grade($USER->id, $this->page->course->id);
@@ -165,8 +171,10 @@ class block_cinfo extends block_base {
 
         // Course info.
         // If showcourseinfo is enabled in the block settings, then show the course info block.
-        if (!$datafortemplate->searchexpand && isset($this->config->showcourseinfo)
-        && $this->config->showcourseinfo && isset($this->config->title) && $this->config->text) {
+        if (
+            !$datafortemplate->searchexpand && isset($this->config->showcourseinfo)
+            && $this->config->showcourseinfo && isset($this->config->title) && $this->config->text
+        ) {
             $datafortemplate->showcourseinfo = true;
             $datafortemplate->courseinfotitle = format_text($this->config->title, FORMAT_HTML);
         }
@@ -174,9 +182,10 @@ class block_cinfo extends block_base {
         // Course announcements.
         // If newsitems is enabled in the course settings and.
         // the block is configured to show announcements, then show the announcements.
-        if (!$datafortemplate->searchexpand && $this->page->course->newsitems
-        && isset($this->config->shownews) && $this->config->shownews) {
-
+        if (
+            !$datafortemplate->searchexpand && $this->page->course->newsitems
+            && isset($this->config->shownews) && $this->config->shownews
+        ) {
             require_once($CFG->dirroot . '/mod/forum/lib.php');   // We'll need this.
 
             $datafortemplate->shownews = true;
@@ -188,42 +197,49 @@ class block_cinfo extends block_base {
             $modinfo = get_fast_modinfo($this->page->course);
             if (empty($modinfo->instances['forum'][$forum->id])) {
                 $datafortemplate->shownews = false;
+            } else {
+                $cm = $modinfo->instances['forum'][$forum->id];
+
+                if (!$cm->uservisible) {
+                    $datafortemplate->shownews = false;
+                }
+
+                $context = context_module::instance($cm->id);
+
+                // User must have perms to view discussions in that forum.
+                if (!has_capability('mod/forum:viewdiscussion', $context)) {
+                    $datafortemplate->shownews = false;
+                }
+
+                // First work out whether we can post to this group and if so, include a link.
+                $datafortemplate->newsurl = $CFG->wwwroot . '/mod/forum/view.php?f=' . $forum->id;
+
+                // Get unread posts.
+                $unreadposts = forum_get_discussions_unread($cm);
+                $datafortemplate->unreadposts = count($unreadposts);
             }
-            $cm = $modinfo->instances['forum'][$forum->id];
-
-            if (!$cm->uservisible) {
-                $datafortemplate->shownews = false;
-            }
-
-            $context = context_module::instance($cm->id);
-
-            // User must have perms to view discussions in that forum.
-            if (!has_capability('mod/forum:viewdiscussion', $context)) {
-                $datafortemplate->shownews = false;
-            }
-
-            // First work out whether we can post to this group and if so, include a link.
-            $datafortemplate->newsurl = $CFG->wwwroot . '/mod/forum/view.php?f=' . $forum->id;
-
-            // Get unread posts.
-            $unreadposts = forum_get_discussions_unread($cm);
-            $datafortemplate->unreadposts = count($unreadposts);
         }
 
         // Activity reports.
         // If showactivityreport is enabled in the course settings.
         // and the block is configured to show activity reports, then show the activity reports.
 
-        if (!$datafortemplate->searchexpand && $this->page->course->showreports
-        && isset($this->config->showactivityreport) && $this->config->showactivityreport) {
+        if (
+            !$datafortemplate->searchexpand && $this->page->course->showreports
+            && isset($this->config->showactivityreport) && $this->config->showactivityreport
+        ) {
             $datafortemplate->showreport = true;
-            $datafortemplate->reporturl = new moodle_url('/report/outline/user.php',
-            ['course' => $this->page->course->id, 'mode' => 'complete', 'id' => $USER->id]);
+            $datafortemplate->reporturl = new moodle_url(
+                '/report/outline/user.php',
+                ['course' => $this->page->course->id, 'mode' => 'complete', 'id' => $USER->id]
+            );
         }
 
         // Course virtual room.
-        if (!$datafortemplate->searchexpand && isset($this->config->virtualroomlink)
-        && $this->config->showvirtualroom && $this->config->virtualroomlink != '') {
+        if (
+            !$datafortemplate->searchexpand && isset($this->config->virtualroomlink)
+            && $this->config->showvirtualroom && $this->config->virtualroomlink != ''
+        ) {
             $datafortemplate->showvr = true;
             $datafortemplate->vrurl = $this->config->virtualroomlink;
             $datafortemplate->vrlabel = format_text($this->config->vrlabel, FORMAT_HTML);
@@ -231,8 +247,10 @@ class block_cinfo extends block_base {
         }
 
         // Course chat room.
-        if (!$datafortemplate->searchexpand && isset($this->config->chatroomlink)
-        && $this->config->showchatroom && $this->config->chatroomlink != '') {
+        if (
+            !$datafortemplate->searchexpand && isset($this->config->chatroomlink)
+            && $this->config->showchatroom && $this->config->chatroomlink != ''
+        ) {
             $datafortemplate->showcr = true;
             $datafortemplate->crurl = $this->config->chatroomlink;
             $datafortemplate->crlabel = format_text($this->config->chatlabel, FORMAT_HTML);
@@ -240,8 +258,10 @@ class block_cinfo extends block_base {
         }
 
         // Course shared folder.
-        if (!$datafortemplate->searchexpand && isset($this->config->folderlink)
-        && $this->config->showfolder && $this->config->folderlink != '') {
+        if (
+            !$datafortemplate->searchexpand && isset($this->config->folderlink)
+            && $this->config->showfolder && $this->config->folderlink != ''
+        ) {
             $datafortemplate->showfolder = true;
             $datafortemplate->folderurl = $this->config->folderlink;
             $datafortemplate->folderlabel = format_text($this->config->folderlabel, FORMAT_HTML);
@@ -250,7 +270,7 @@ class block_cinfo extends block_base {
 
         $datafortemplate->aligncenter = (!isset($this->config->aligncenter) || $this->config->aligncenter) ? true : false;
 
-        // Bootstrap 5
+        // Bootstrap 5.
         if ($CFG->branch >= 405) {
             $datafortemplate->bs = '-bs';
         }
@@ -258,8 +278,8 @@ class block_cinfo extends block_base {
         $textcenter = !isset($this->config->aligncenter) || $this->config->aligncenter ? 'text-center' : '';
         $text = '<div id="cinfo-wrapper" class="d-none">
         <div class="text-nowrap ' . $textcenter . ' scrollbar-0 p-0">'
-        . $OUTPUT->render_from_template('block_cinfo/main', $datafortemplate)
-        . '</div></div>';
+            . $OUTPUT->render_from_template('block_cinfo/main', $datafortemplate)
+            . '</div></div>';
 
         unset($filteropt); // Memory footprint.
 
@@ -277,8 +297,15 @@ class block_cinfo extends block_base {
 
         $config = clone ($data);
         // Move embedded files into a proper filearea and adjust HTML links to match.
-        $config->text = file_save_draft_area_files($data->text['itemid'], $this->context->id,
-        'block_cinfo', 'content', 0, ['subdirs' => true], $data->text['text']);
+        $config->text = file_save_draft_area_files(
+            $data->text['itemid'],
+            $this->context->id,
+            'block_cinfo',
+            'content',
+            0,
+            ['subdirs' => true],
+            $data->text['text']
+        );
         $config->format = $data->text['format'];
 
         parent::instance_config_save($config, $nolongerused);
@@ -333,6 +360,4 @@ class block_cinfo extends block_base {
     public function instance_can_be_docked() {
         return (!empty($this->config->title) && parent::instance_can_be_docked());
     }
-
-
 }

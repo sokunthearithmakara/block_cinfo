@@ -40,14 +40,13 @@ use core_privacy\local\metadata\collection;
  */
 class provider implements
         // The block_cinfo block stores user provided data.
-        \core_privacy\local\metadata\provider,
+    \core_privacy\local\metadata\provider,
 
         // This plugin is capable of determining which users have data within it.
-        \core_privacy\local\request\core_userlist_provider,
+    \core_privacy\local\request\core_userlist_provider,
 
         // The block_cinfo block provides data directly to core.
-        \core_privacy\local\request\plugin\provider {
-
+    \core_privacy\local\request\plugin\provider {
     /**
      * Returns information about how block_cinfo stores its data.
      *
@@ -129,7 +128,7 @@ class provider implements
 
         $user = $contextlist->get_user();
 
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT
                     c.id AS contextid,
@@ -217,7 +216,6 @@ class provider implements
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         // The only way to delete data for the html block is to delete the block instance itself.
         foreach ($contextlist as $context) {
-
             if (!$context instanceof \context_block) {
                 continue;
             }
