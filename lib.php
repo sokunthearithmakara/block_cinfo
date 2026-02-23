@@ -85,7 +85,7 @@ function block_cinfo_global_db_replace($search, $replace) {
             $DB->update_record('block_instances', [
                 'id' => $instance->id,
                 'configdata' => base64_encode(serialize($config)),
-                'timemodified' => time()
+                'timemodified' => time(),
             ]);
         }
     }
