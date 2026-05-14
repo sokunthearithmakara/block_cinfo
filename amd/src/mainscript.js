@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for the accessreview block.
+ * Manager for the cinfo block.
  *
  * @module      block_cinfo/mainscript
  * @author      Sokunthearith Makara <sokunthearithmakara@gmail.com>
